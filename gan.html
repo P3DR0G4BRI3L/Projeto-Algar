@@ -55,7 +55,7 @@
     <label for="obs">Observação</label>
     <textarea id="obs" name="obs" rows="4" required></textarea>
 
-    <label for="local">Localidade</label>
+    <label for="local">Loja</label>
     <input type="text" id="local" name="local" required>
 
     <input type="submit" value="Gerar Relatório">
@@ -79,18 +79,18 @@
         const local = document.getElementById('local').value;
 
         // Criando o relatório
-        let report = `
-		⚠️ PEDIDO DE PRIORIZAÇÃO ⚠️
-            
-        GRUPO/FILA: ${grupo}
-        LINKS: ${link}
-        IMPACTO: ${impacto}
-        OBS: ${obs}
-        LOJA: ${local}
-        `;
+        let report = `⚠️ PEDIDO DE PRIORIZAÇÃO ⚠️
+        
+GRUPO/FILA: ${grupo}
+LINKS: ${link}
+IMPACTO: ${impacto}
+OBS: ${obs}
+LOJA: ${local}
+
+`;
 		
         // Mostrando o relatório
-        document.getElementById('reportContent').innerText = report.trim();
+        document.getElementById('reportContent').innerText = report
         document.getElementById('report').style.display = 'block';
         document.getElementById('copyButton').style.display = 'inline-block'; // Mostrar o botão de copiar
     });

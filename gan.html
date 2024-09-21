@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>GAN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"], button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 15px;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #45a049;
+			
+        }
+        .report {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Relatório GAN</h1>
+<form id="linkForm">
+    <label for="grupo">Grupo</label>
+    <input type="text" id="grupo" name="grupo" required>
+
+    <label for="link">Link</label>
+    <input type="url" id="link" name="link" required>
+
+    <label for="impacto">Impacto</label>
+    <input type="text" id="impacto" name="impacto" required>
+
+    <label for="obs">Observação</label>
+    <textarea id="obs" name="obs" rows="4" required></textarea>
+
+    <label for="local">Localidade</label>
+    <input type="text" id="local" name="local" required>
+
+    <input type="submit" value="Gerar Relatório">
+</form>
+
+<div class="report" id="report" style="display: none;">
+    <pre id="reportContent"></pre>
+    <button id="copyButton" style="display: none;">Copiar para Área de Transferência</button>
+</div>
+
+<script>
+//Pedro Gabriel
+    document.getElementById('linkForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita o envio do formulário
+
+        // Obtendo os valores dos inputs
+        const grupo = document.getElementById('grupo').value;
+        const link = document.getElementById('link').value;
+        const impacto = document.getElementById('impacto').value;
+        const obs = document.getElementById('obs').value;
+        const local = document.getElementById('local').value;
+
+        // Criando o relatório
+        let report = `
+		⚠️ PEDIDO DE PRIORIZAÇÃO ⚠️
+            
+        GRUPO/FILA: ${grupo}
+        LINKS: ${link}
+        IMPACTO: ${impacto}
+        OBS: ${obs}
+        LOJA: ${local}
+        `;
+		
+        // Mostrando o relatório
+        document.getElementById('reportContent').innerText = report.trim();
+        document.getElementById('report').style.display = 'block';
+        document.getElementById('copyButton').style.display = 'inline-block'; // Mostrar o botão de copiar
+    });
+
+    // Função para copiar o relatório para a área de transferência
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const reportText = document.getElementById('reportContent').innerText;
+
+        navigator.clipboard.writeText(reportText).then(function() {
+            alert('Relatório copiado para a área de transferência!');
+        }, function(err) {
+            console.error('Erro ao copiar o texto: ', err);
+        });
+    });
+</script>
+
+</body>
+</html>

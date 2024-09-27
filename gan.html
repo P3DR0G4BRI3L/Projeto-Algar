@@ -1,111 +1,266 @@
+<!--
+
+    Title: Relatório do GAN.
+    Author: Pedro Grabriel.
+    Revised by: YumemiReis
+
+-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>GAN</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        * {
+            margin: 0px;
+            padding: 0px;
+            position: relative;
+            box-sizing: border-box;
         }
+
+        body {
+            width: 100%;
+            overflow: hidden;
+            background-color: #FDFDFD;
+            font-family: Arial, sans-serif;
+        }
+
         label {
             display: block;
             margin: 10px 0 5px;
         }
+
         input, textarea {
             width: 100%;
             padding: 8px;
+            outline: none;
+            resize: vertical;
+            border-radius: 4px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 4px;
         }
-        input[type="submit"], button {
+
+        button,
+        input[type="submit"] {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
             padding: 10px 15px;
         }
-        input[type="submit"]:hover, button:hover {
+
+        button:hover,
+        input[type="submit"]:hover {
             background-color: #45a049;
 			
         }
-        .report {
-            margin-top: 20px;
+
+        .reportContent {
             padding: 10px;
-            border: 1px solid #ccc;
+            margin-top: 20px;
+            min-height: 6rem;
             border-radius: 4px;
+            border: 1px solid #ccc;
             background-color: #f9f9f9;
         }
+
+        .report {
+            width: 100%;
+        }
+
+        .report > button {
+            right: 1rem;
+            bottom: 2rem;
+            position: absolute;
+        }
+
+        .gan-card {
+            gap: 2rem;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            padding: 6rem 4rem;
+        }
+
+        .gan-card > div:first-child {
+            max-width: 50%;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .gan-result {
+            width: 100%;
+            height: 100vh;
+        }
+
+        #toast {
+            opacity: 0;
+            right: 2rem;
+            bottom: 2rem;
+            position: fixed;
+            min-height: 4rem;
+            max-width: 24rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid #9d9d9d;
+            background-color: #CDCDCD;
+        }
+
+        @keyframes open-toast {
+            0%      { width: 0px; }
+            20%     { width: 100%; opacity: 1; }
+            90%     { width: 100%; opacity: 1; }
+            100%    { width: 0px;  opacity: 0; }
+        }
+
+        #toast.toast {
+            animation: open-toast 6s forwards;
+        }
+
+        #toast.error {
+            animation: open-toast 6s forwards;
+            border-color: #bb7070;
+            background-color: #ff9898;
+        }
+
+        #toast.success {
+            animation: open-toast 6s forwards;
+            border-color: #45a049;
+            background-color: #91e495;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                overflow: auto;
+            }
+
+            .gan-card {
+                padding: 1rem;
+                flex-direction: column;
+            }
+            
+            .gan-card > div:first-child {
+                width: 100%;
+                max-width: 100%;
+                overflow: visible;
+            }
+        }
     </style>
+
+    <title>Relatório GAN</title>
 </head>
 <body>
-
-<h1>Relatório GAN</h1>
-<form id="linkForm">
-    <label for="grupo">Grupo</label>
-    <input type="text" id="grupo" name="grupo" required>
-
-    <label for="link">Link</label>
-    <input type="url" id="link" name="link" required>
-
-    <label for="impacto">Impacto</label>
-    <input type="text" id="impacto" name="impacto" required>
-
-    <label for="obs">Observação</label>
-    <textarea id="obs" name="obs" rows="4" required></textarea>
-
-    <label for="local">Loja</label>
-    <input type="text" id="local" name="local" required>
-
-    <input type="submit" value="Gerar Relatório">
-</form>
-
-<div class="report" id="report" style="display: none;">
-    <pre id="reportContent"></pre>
-    <button id="copyButton" style="display: none;">Copiar para Área de Transferência</button>
-</div>
-
-<script>
-//Pedro Gabriel
-    document.getElementById('linkForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evita o envio do formulário
-
-        // Obtendo os valores dos inputs
-        const grupo = document.getElementById('grupo').value;
-        const link = document.getElementById('link').value;
-        const impacto = document.getElementById('impacto').value;
-        const obs = document.getElementById('obs').value;
-        const local = document.getElementById('local').value;
-
-        // Criando o relatório
-        let report = `⚠️ PEDIDO DE PRIORIZAÇÃO ⚠️
+    <section class="gan-card">
+        <div>
+            <h1>Relatório GAN</h1>
+    
+            <form id="linkForm">
+                <label for="grupo">Grupo</label>
+                <input type="text" id="grupo" name="grupo" required>
+            
+                <label for="link">Link</label>
+                <input type="text" id="link" name="link" required>
+            
+                <label for="impacto">Impacto</label>
+                <input type="text" id="impacto" name="impacto" required>
+            
+                <label for="obs">Observação</label>
+                <textarea id="obs" name="obs" rows="4" required></textarea>
+            
+                <label for="local">Loja</label>
+                <input type="text" id="local" name="local" required>
+            </form>
+        </div>
         
-GRUPO/FILA: ${grupo}
-LINKS: ${link}
-IMPACTO: ${impacto}
-OBS: ${obs}
-LOJA: ${local}
+        <div class="report" id="report">
+            <strong><p>Relatório</p></strong>
+            <pre id="reportContent" class="reportContent"></pre>
+            <button id="copyButton" style="display: none;">Copiar para Área de Transferência</button>
+        </div>
+    </section>
 
-`;
-		
-        // Mostrando o relatório
-        document.getElementById('reportContent').innerText = report
-        document.getElementById('report').style.display = 'block';
-        document.getElementById('copyButton').style.display = 'inline-block'; // Mostrar o botão de copiar
-    });
+    <div id="toast">
+        <p></p>
+    </div>
 
-    // Função para copiar o relatório para a área de transferência
-    document.getElementById('copyButton').addEventListener('click', function() {
-        const reportText = document.getElementById('reportContent').innerText;
+    <script>
+        const toast = document.getElementById("toast");
+        const toastText = document.querySelector("#toast > p");
 
-        navigator.clipboard.writeText(reportText).then(function() {
-            alert('Relatório copiado para a área de transferência!');
-        }, function(err) {
-            console.error('Erro ao copiar o texto: ', err);
+        // Elements of form.
+        const form          = document.getElementById("linkForm");
+        const reportElem    = document.getElementById("report");
+        const reportContent = document.getElementById('reportContent')
+        const reportBtnElem = document.getElementById("copyButton");
+        const copyButton    = document.getElementById("copyButton");
+        
+        // Elements of final report text.
+        const obsElem       = document.getElementById('obs');
+        const linkElem      = document.getElementById('link');
+        const groupElem     = document.getElementById('grupo');
+        const localElem     = document.getElementById('local');
+        const impactElem    = document.getElementById('impacto');
+
+        // Function that update report text.
+        const updateReport = () => {
+            let report = `⚠️ PEDIDO DE PRIORIZAÇÃO ⚠️\n`;
+
+            groupElem.value     ? report += `GRUPO/FILA: ${groupElem.value}\n`  : undefined;
+            linkElem.value      ? report += `LINKS: ${linkElem.value}\n`        : undefined;
+            impactElem.value    ? report += `IMPACTO: ${impactElem.value}\n`    : undefined;
+            obsElem.value       ? report += `OBS: ${obsElem.value}\n`           : undefined;
+            localElem.value     ? report += `LOJA: ${localElem.value}\n`        : undefined;
+
+            document.getElementById('reportContent').innerText = report
+            document.getElementById('copyButton').style.display = 'inline-block';
+        };
+
+        form.addEventListener('submit', (ev) => {
+            updateReport();
         });
-    });
-</script>
 
+        obsElem.onkeyup = (ev) => updateReport();
+        linkElem.onkeyup = (ev) => updateReport();
+        groupElem.onkeyup = (ev) => updateReport();
+        localElem.onkeyup = (ev) => updateReport();
+        impactElem.onkeyup = (ev) => updateReport();
+
+        // Função para copiar o relatório para a área de transferência
+        let toastOpened = false;
+        copyButton.addEventListener('click', function() {
+            const reportText = reportContent.innerText;
+
+            function open_toast(type, message)
+            {
+                if (toastOpened) {
+                    return;
+                }
+
+                
+                toastOpened = true,
+                toast.classList.toggle(type),
+                toastText.textContent = message,
+                
+                setTimeout(() => {
+                    toastOpened = false;
+                    toast.classList.toggle(type);
+                }, 6000)
+            }
+
+            navigator.clipboard.writeText(reportText)
+                .then(
+                    () => {
+                        open_toast("success", "Copiado com sucesso!");
+                    },
+                    () => {
+                        open_toast("error", "Erro ao enviar texto para ");
+                    },
+                );
+        });
+    </script>
 </body>
 </html>

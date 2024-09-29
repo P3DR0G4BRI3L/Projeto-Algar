@@ -1,7 +1,7 @@
 <!--
 
     Title: Relatório do GAN.
-    Author: Pedro Grabriel.
+    Author: Pedro Gabriel.
     Revised by: YumemiReis
 
 -->
@@ -63,10 +63,10 @@
             margin-top: 20px;
             min-height: 6rem;
             border-radius: 4px;
-	    line-break: anywhere;
-	    word-break: break-word;
+			line-break: anywhere;
+			word-break: break-word;
             border: 1px solid #ccc;
-	    white-space: break-spaces;
+			white-space: break-spaces;
             background-color: #f9f9f9;
         }
 
@@ -77,9 +77,19 @@
 
         .report > button {
             right: 1rem;
-            bottom: 2rem;
+            bottom: -4rem;
             position: absolute;
         }
+		
+		.report > button:first-of-type {
+			right: auto;
+			background-color: #3594fa;
+		}
+		
+		.report > button,
+		.report > button:first-of-type {
+			border-radius: 4px;
+		}
 
         .gan-card {
             gap: 2rem;
@@ -183,6 +193,7 @@
         <div class="report" id="report">
             <strong><p>Relatório</p></strong>
             <pre id="reportContent" class="reportContent"></pre>
+			<button id="clearButton">Limpar</button>
             <button id="copyButton" style="display: none;">Copiar para Área de Transferência</button>
         </div>
     </section>
@@ -199,8 +210,8 @@
         const form          = document.getElementById("linkForm");
         const reportElem    = document.getElementById("report");
         const reportContent = document.getElementById('reportContent')
-        const reportBtnElem = document.getElementById("copyButton");
         const copyButton    = document.getElementById("copyButton");
+		const clearButton   = document.getElementById("clearButton");
         
         // Elements of final report text.
         const obsElem       = document.getElementById('obs');
@@ -219,8 +230,8 @@
             obsElem.value       ? report += `OBS: ${obsElem.value}\n`           : undefined;
             localElem.value     ? report += `LOJA: ${localElem.value}\n`        : undefined;
 
-            document.getElementById('reportContent').innerText = report
-            document.getElementById('copyButton').style.display = 'inline-block';
+            reportContent.innerText = report
+            copyButton.style.display = 'inline-block';
         };
 
         form.addEventListener('submit', (ev) => {
@@ -265,6 +276,18 @@
                     },
                 );
         });
+		
+		clearButton.addEventListener("click", (ev) => {
+			ev.preventDefault();
+
+			obsElem.value = "";
+			linkElem.value = "";
+			groupElem.value = "";
+			localElem.value = "";
+			impactElem.value = "";
+			reportContent.innerText = "";
+			copyButton.style.display = "none";
+		});
     </script>
 </body>
 </html>

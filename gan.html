@@ -168,6 +168,9 @@
     <title>Relatório GAN</title>
 </head>
 <body>
+
+
+
     <section class="gan-card">
         <div>
             <h1>Relatório GAN</h1>
@@ -193,7 +196,7 @@
         <div class="report" id="report">
             <strong><p>Relatório</p></strong>
             <pre id="reportContent" class="reportContent"></pre>
-			<button id="clearButton">Limpar</button>
+			<button id="clearButton" >Limpar</button>
             <button id="copyButton" style="display: none;">Copiar para Área de Transferência</button>
         </div>
     </section>
@@ -277,9 +280,14 @@
                 );
         });
 		
+		function confirmar(msg){
+			return confirm(msg);
+		}
+		
 		clearButton.addEventListener("click", (ev) => {
 			ev.preventDefault();
-
+			if(confirmar("Deseja excluir tudo?")){
+				
 			obsElem.value = "";
 			linkElem.value = "";
 			groupElem.value = "";
@@ -287,7 +295,14 @@
 			impactElem.value = "";
 			reportContent.innerText = "";
 			copyButton.style.display = "none";
+			}else{
+			alert("pra que apertou então?");
+			}
 		});
-    </script>
+		
+		
+		
+
+		</script>
 </body>
 </html>
